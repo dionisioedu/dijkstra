@@ -4,8 +4,6 @@
 #include <map>
 #include <deque>
 
-#define DEBUG
-
 class Node {
     int _id;
 
@@ -30,10 +28,6 @@ int shortestPath(Graph* graph, Node* start, Node* end) {
 
     for (auto v : *graph) {
         distance.insert(std::make_pair(v, INT32_MAX));
-
-#ifdef DEBUG
-        std::cout << "Initializing distance for node " << v->getId() << std::endl;
-#endif
     }
 
     distance[start] = 0;
@@ -43,21 +37,10 @@ int shortestPath(Graph* graph, Node* start, Node* end) {
 
         visited.insert(curr);
 
-        std::cout << "Visiting node " << curr->getId() << std::endl;
-
         for (auto n : curr->adjacents) {
             if (visited.find(n.first) == visited.end()) {
-#ifdef DEBUG
-                std::cout << "Visiting adjacent " << n.first->getId() << std::endl;
-#endif
-
-                if (distance[n.first] == INT32_MAX || distance[n.first] > (n.second + distance[curr])) {
-#ifdef DEBUG
-                    std::cout << "Updating shortest distance for node " << n.first->getId()
-                        << " distance " << n.second + distance[curr] << std::endl;
-#endif
-
-                    distance[n.first] = distance[curr] + n.second;
+                if (distance[n.first] > (n.second + distance[curr])) {
+                    distance[n.first] = n.second + distance[curr];
                 }
             }
         }
